@@ -1,13 +1,17 @@
 package server;
 
+import client.entity.CatalogRecord;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class ServerThread extends Thread {
     private InetAddress address;
@@ -18,7 +22,7 @@ public class ServerThread extends Thread {
     private Statement statement;
     private int number;
     private UserTable userTable;
-    private OrderUserTable orderUserTable;
+    private CatalogTable catalogTable;
 
     public ServerThread(Socket s, int number) throws IOException {
         this.number = number;
@@ -34,17 +38,16 @@ public class ServerThread extends Thread {
             statement = conn.createStatement();
             userTable = new UserTable(statement, mydbc);
             //pupilTable = new PupilTable(stmt, mdbc);
-            orderUserTable = new OrderUserTable(statement, mydbc);
+            catalogTable = new CatalogTable(statement, mydbc);
         } catch (SQLException ex) {
             ex.printStackTrace();
             System.err.println(ex.getMessage());
         }
     }
 
-    public void writeObj(String str) {
-        clientMessage = str;
+    public <T extends Serializable> void writeObj(T str) {
         try {
-            outstream.writeObject(clientMessage);
+            outstream.writeObject(str);
         } catch (IOException ex) {
             System.err.println("Произошла потоковая ошибка" + ex);
         }
@@ -84,10 +87,9 @@ public class ServerThread extends Thread {
                         messageToClient = userTable.checkLogin(UserLogin, UserPassword);
                         writeObj(messageToClient);
                         break;
-//                    case "initTable":
-//                        messageToClient = pupilTable.readAllRecord();
-//                        writeObj(messageToClient);
-//                        break;
+                    case "catalog_records":
+                        writeObj((ArrayList<CatalogRecord>) catalogTable.readAllRecords());
+                        break;
 //                    case "addInPupilsTable":
 //                        messageToClient = pupilTable.addInTable(messageParts);
 //                        writeObj(messageToClient);

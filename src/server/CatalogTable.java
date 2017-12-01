@@ -1,18 +1,22 @@
 package server;
 
+import client.entity.CatalogRecord;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
-public class OrderUserTable extends DataTable implements ResultFromTable {
-    public OrderUserTable(Statement statement, DatabaseConnection mydbc) {
+public class CatalogTable extends DataTable implements ResultFromTable {
+    public CatalogTable(Statement statement, DatabaseConnection mydbc) {
         super(statement, mydbc);
     }
 
     public ResultSet getResultFromTable() {
         ResultSet result = null;
         try {
-            result = statement.executeQuery("SELECT * FROM orders");
+            result = statement.executeQuery("SELECT * FROM catalog");
         } catch (SQLException ex) {
             ex.printStackTrace();
             System.err.println(ex.getMessage());
@@ -48,27 +52,27 @@ public class OrderUserTable extends DataTable implements ResultFromTable {
     }
 
 
-    public String readAllRecords() {
+    public List<CatalogRecord> readAllRecords() {
         ResultSet result = getResultFromTable();
+        List<CatalogRecord> records = new ArrayList<>();
         try {
             while (result.next()) {
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append(result.getString("idOrders"));
-                stringBuilder.append(",");
-                stringBuilder.append(result.getString("userLogin"));
-                stringBuilder.append(",");
-                stringBuilder.append(result.getString("idPupil"));
-                stringBuilder.append(",");
-                stringBuilder.append(result.getString("surname"));
-                stringBuilder.append(",");
-
-                return stringBuilder.toString();
+                CatalogRecord record = new CatalogRecord(
+                        result.getInt("id"),
+                        result.getString("name"),
+                        result.getString("firm"),
+                        result.getInt("yearOfPublishing"),
+                        result.getInt("price"),
+                        result.getInt("amount")
+                );
+                records.add(record);
             }
+            return records;
         } catch (Exception e) {
             System.err.println("Хьюстон, у нас проблемы!");
         } finally {
             databaseConnection.closeConnection(result);
         }
-        return "";
+        return null;
     }
 }
