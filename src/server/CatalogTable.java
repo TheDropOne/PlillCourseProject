@@ -16,7 +16,7 @@ public class CatalogTable extends DataTable implements ResultFromTable {
     public ResultSet getResultFromTable() {
         ResultSet result = null;
         try {
-            result = statement.executeQuery("SELECT * FROM catalog");
+            result = statement.executeQuery("SELECT * FROM content");
         } catch (SQLException ex) {
             ex.printStackTrace();
             System.err.println(ex.getMessage());
@@ -61,7 +61,7 @@ public class CatalogTable extends DataTable implements ResultFromTable {
                         result.getInt("id"),
                         result.getString("name"),
                         result.getString("firm"),
-                        result.getInt("yearOfPublishing"),
+                        result.getInt("year_of_publishing"),
                         result.getInt("price"),
                         result.getInt("amount")
                 );

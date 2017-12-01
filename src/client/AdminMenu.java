@@ -47,22 +47,20 @@ public class AdminMenu extends JFrame {
         redactButton.setLocation(130, 200);
         deleteButton.setSize(230, 100);
         deleteButton.setLocation(430, 200);
-        scroll = new JScrollPane(contentTable);
-        scroll.setSize(740, 320);
-        scroll.setLocation(30, 330);
-        scroll.setVisible(false);
         add(viewButton);
         add(addButton);
         add(redactButton);
         add(deleteButton);
-        add(scroll);
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public void attachTable(ContentTable contentTable) {
         this.contentTable = contentTable;
+        scroll = new JScrollPane(contentTable);
+        scroll.setSize(740, 320);
+        scroll.setLocation(30, 330);
         scroll.setVisible(true);
-        scroll.updateUI();
+        add(scroll);
     }
 }

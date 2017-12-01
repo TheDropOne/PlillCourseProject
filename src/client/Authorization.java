@@ -70,6 +70,12 @@ class Authorization extends JFrame {
             login = loginField.getText();
             password = new String(passwordField.getPassword());
             if (login.isEmpty()) {
+                login = "null";
+            }
+            if (password .isEmpty()) {
+                password = "null";
+            }
+            if (login.isEmpty()) {
                 loginLabel.setForeground(Color.red);
                 loginLabel.setText("Неверный логин!");
             }

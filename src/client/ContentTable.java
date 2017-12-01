@@ -17,28 +17,25 @@ public class ContentTable extends JTable {
 
     public ContentTable(List<CatalogRecord> list) {
         DefaultTableModel model = new DefaultTableModel();
-        try {
-            ResultSetMetaData rsmd = rs.getMetaData();
-            for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                model.addColumn(rsmd.getColumnName(i));
-            }
             model.addColumn("id");
             model.addColumn("name");
             model.addColumn("firm");
             model.addColumn("yearOfPublishing");
             model.addColumn("price");
             model.addColumn("amount");
-            while (rs.next()) {
+            for (CatalogRecord record : list) {
                 Vector v = new Vector();
-                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                    v.add(rs.getString(i));
-                }
+
+                v.add(record.getId());
+                v.add(record.getName());
+                v.add(record.getFirm());
+                v.add(record.getYearOfPublishing());
+                v.add(record.getPrice());
+                v.add(record.getAmount());
+
                 model.addRow(v);
             }
             this.setModel(model);
             this.setAutoResizeMode(AUTO_RESIZE_ALL_COLUMNS);
-        } catch (SQLException ex) {
-            Logger.getLogger(ContentTable.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 }
