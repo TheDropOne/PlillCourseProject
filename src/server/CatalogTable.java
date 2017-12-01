@@ -1,6 +1,7 @@
 package server;
 
 import client.entity.CatalogRecord;
+import client.entity.InsertRecord;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,33 +25,45 @@ public class CatalogTable extends DataTable implements ResultFromTable {
         return result;
     }
 
-    public String addInTable(String[] data) {
-        String insertStr = "";
+    public String addInTable(String data) {
+        String[] splitted = data.split(" ");
         try {
-            insertStr = "INSERT INTO orders (userLogin,idPupil,surname) VALUES ("
-                    + quotate(data[1]) + ","
-                    + quotate(data[2]) + ","
-                    + quotate(data[3]) + ")";
+            String insertStr = "INSERT INTO content (name, firm, year_of_publishing, price, amount) VALUES ("
+                    + quotate(splitted[0]) + ","
+                    + quotate(splitted[1]) + ","
+                    + splitted[2] + ","
+                    + splitted[3] + ","
+                    + splitted[4] + ")";
             int done = statement.executeUpdate(insertStr);
-            return "success";
+            return (done != 0) ? "Успешно добавлено" : "Ошибка добавления!";
         } catch (Exception ex) {
             System.err.println("Ошибка ввода данных");
             return "fail";
         }
     }
 
-    public String deleteFromTable(String ID) {
-        String insertStr = "";
+    public String deleteFromTable(Integer number) {
         try {
-            insertStr = "DELETE FROM orders WHERE idOrders=" + ID;
+            String insertStr = "DELETE FROM content WHERE id=" + number;
             int done = statement.executeUpdate(insertStr);
-            return "success";
+            return (done != 0) ? "Успешно удалено" : "Ошибка удаления!";
         } catch (Exception e) {
             System.err.println("Ошибка удаления данных");
             return "fail";
         }
     }
 
+    public String updateRecord(String data, int number) {
+//        try {
+//            String insertStr = "UPDATE content SET id=" + number;
+//            int done = statement.executeUpdate(insertStr);
+//            return (done != 0) ? "Успешно удалено" : "Ошибка удаления!";
+//        } catch (Exception e) {
+//            System.err.println("Ошибка удаления данных");
+//            return "fail";
+//        }
+        return null;
+    }
 
     public List<CatalogRecord> readAllRecords() {
         ResultSet result = getResultFromTable();

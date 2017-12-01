@@ -1,6 +1,7 @@
 package server;
 
 import client.entity.CatalogRecord;
+import client.entity.InsertRecord;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -90,19 +91,21 @@ public class ServerThread extends Thread {
                     case "catalog_records":
                         writeObj((ArrayList<CatalogRecord>) catalogTable.readAllRecords());
                         break;
-//                    case "addInPupilsTable":
-//                        messageToClient = pupilTable.addInTable(messageParts);
-//                        writeObj(messageToClient);
-//                        break;
-//                    case "deleteFromPupilsTable":
-//                        String ID = messageParts[1];
-//                        messageToClient = pupilTable.deleteFromTable(ID);
-//                        writeObj(messageToClient);
-//                        break;
-//                    case "editInPupilsTable":
-//                        messageToClient = pupilTable.EditInTable(messageParts);
-//                        writeObj(messageToClient);
-//                        break;
+                    case "add_record":
+                        messageToClient = catalogTable.addInTable(messageParts[1]);
+                        writeObj(messageToClient);
+                        break;
+                    case "delete_record":
+                        String number = messageParts[1];
+                        messageToClient = catalogTable.deleteFromTable(Integer.parseInt(number));
+                        writeObj(messageToClient);
+                        break;
+                    case "update_record":
+                        String data = messageParts[1];
+                        String numberForUpdate = messageParts[2];
+                        messageToClient = catalogTable.updateRecord(data, Integer.parseInt(numberForUpdate));
+                        writeObj(messageToClient);
+                        break;
 //                    case "filterInPupilTable":
 //                        String FilterColumn = messageParts[1];
 //                        String FilterValue = messageParts[2];
