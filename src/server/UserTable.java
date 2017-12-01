@@ -1,17 +1,12 @@
 package server;
 
-/**
- * Created by philip on 30.11.17.
- */
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class UserTable extends DataTable implements ResultFromTable {
 
-    public UserTable(Statement statement, DatabaseConnection mydbc) {
-
+    UserTable(Statement statement, DatabaseConnection mydbc) {
         super(statement, mydbc);
     }
 
@@ -21,6 +16,7 @@ public class UserTable extends DataTable implements ResultFromTable {
         try {
             rs = statement.executeQuery("SELECT * FROM users ");
         } catch (SQLException e) {
+            e.printStackTrace();
         }
         return rs;
     }
@@ -34,14 +30,14 @@ public class UserTable extends DataTable implements ResultFromTable {
             } else {
                 return "fail,3";
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println("Произошло исключение в таблице пользователя");
             e.printStackTrace();
         } catch (Exception e) {
             System.out.println("Произошло исключение");
             e.printStackTrace();
         } finally {
-            mydbc.closeConnection(rs);
+            databaseConnection.closeConnection(rs);
         }
         return "";
     }

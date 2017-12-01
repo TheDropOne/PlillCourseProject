@@ -3,9 +3,6 @@ package client;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by philip on 29.11.17.
- */
 public class AdminMenu extends JFrame {
     private JButton viewButton;
     private JButton addButton;

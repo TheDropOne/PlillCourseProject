@@ -13,7 +13,7 @@ public class UserMenu extends JFrame {
 
     private JList content;
 
-    public UserMenu(String login) throws HeadlessException {
+    UserMenu(String login) throws HeadlessException {
         super("Меню пользователя, Ваш ник  - " + login);
         viewButton = new JButton("Просмотр");
         addButton = new JButton("Добавить");
@@ -29,6 +29,6 @@ public class UserMenu extends JFrame {
         add(addButton);
         add(content);
         setLayout(new BorderLayout());
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 }

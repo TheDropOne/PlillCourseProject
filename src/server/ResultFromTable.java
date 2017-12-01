@@ -1,9 +1,5 @@
 package server;
 
-/**
- * Created by philip on 30.11.17.
- */
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;

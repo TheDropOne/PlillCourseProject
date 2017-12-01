@@ -9,9 +9,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * Created by philip on 29.11.17.
- */
 public class ServerThread extends Thread {
     private InetAddress address;
     private ObjectOutputStream outstream;
@@ -22,7 +19,7 @@ public class ServerThread extends Thread {
     private int number;
     private UserTable userTable;
     private OrderUserTable orderUserTable;
-    private AdminTable adminTable;
+
     public ServerThread(Socket s, int number) throws IOException {
         this.number = number;
 
@@ -35,12 +32,12 @@ public class ServerThread extends Thread {
         Connection conn = mydbc.getMyConnection();
         try {
             statement = conn.createStatement();
-            adminTable = new AdminTable(statement, mydbc);
             userTable = new UserTable(statement, mydbc);
             //pupilTable = new PupilTable(stmt, mdbc);
             orderUserTable = new OrderUserTable(statement, mydbc);
         } catch (SQLException ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
+            System.err.println(ex.getMessage());
         }
     }
 
@@ -52,6 +49,7 @@ public class ServerThread extends Thread {
             System.err.println("Произошла потоковая ошибка" + ex);
         }
     }
+
     public void disconnect() {
         try {
             if (outstream != null) {
@@ -60,13 +58,14 @@ public class ServerThread extends Thread {
             if (inputstream != null) {
                 inputstream.close();
             }
-            System.out.println(address.getHostName() + "Завершенно соединение " + number + "-го пользователя");
+            System.out.println(address.getHostName() + "Завершено соединение " + number + "-го пользователя");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             this.interrupt();
         }
     }
+
     public void run() {
         int i = 0;
         String messageToClient = "";
@@ -76,7 +75,7 @@ public class ServerThread extends Thread {
             System.out.println("Сервер ожидает действий от клиента");
             while (!ThreadStop.equals("Exit")) {
 
-                bufMessage = (String)inputstream.readObject();
+                bufMessage = (String) inputstream.readObject();
                 String messageParts[] = bufMessage.split(",");
                 switch (messageParts[0]) {
                     case "CheckUserLogin":
@@ -86,16 +85,16 @@ public class ServerThread extends Thread {
                         writeObj(messageToClient);
                         break;
 //                    case "initTable":
-//                        messageToClient = pupilTable.ReadAllRecord();
+//                        messageToClient = pupilTable.readAllRecord();
 //                        writeObj(messageToClient);
 //                        break;
 //                    case "addInPupilsTable":
-//                        messageToClient = pupilTable.AddInTable(messageParts);
+//                        messageToClient = pupilTable.addInTable(messageParts);
 //                        writeObj(messageToClient);
 //                        break;
 //                    case "deleteFromPupilsTable":
 //                        String ID = messageParts[1];
-//                        messageToClient = pupilTable.DeleteFromTable(ID);
+//                        messageToClient = pupilTable.deleteFromTable(ID);
 //                        writeObj(messageToClient);
 //                        break;
 //                    case "editInPupilsTable":
@@ -105,7 +104,7 @@ public class ServerThread extends Thread {
 //                    case "filterInPupilTable":
 //                        String FilterColumn = messageParts[1];
 //                        String FilterValue = messageParts[2];
-//                        messageToClient = pupilTable.FilterInTable(FilterColumn, FilterValue);
+//                        messageToClient = pupilTable.filterInTable(FilterColumn, FilterValue);
 //                        writeObj(messageToClient);
 //                        break;
 //                    case "sortInPupilTable":
@@ -115,21 +114,21 @@ public class ServerThread extends Thread {
 //                        writeObj(messageToClient);
 //                        break;
 //                    case "addInOrdersTable":
-//                        messageToClient = orderTable.AddInTable(messageParts);
+//                        messageToClient = orderTable.addInTable(messageParts);
 //                        writeObj(messageToClient);
 //                        break;
 //                    case "showUserOrders":
 //                        String loginValue = messageParts[1];
-//                        messageToClient = orderTable.FilterInTable("", loginValue);
+//                        messageToClient = orderTable.filterInTable("", loginValue);
 //                        writeObj(messageToClient);
 //                        break;
 //                    case "initTableOrders":
-//                        messageToClient = orderTable.ReadAllRecord();
+//                        messageToClient = orderTable.readAllRecord();
 //                        writeObj(messageToClient);
 //                        break;
 //                    case "deleteFromOrdersTable":
 //                        String id = messageParts[1];
-//                        messageToClient = orderTable.DeleteFromTable(id);
+//                        messageToClient = orderTable.deleteFromTable(id);
 //                        writeObj(messageToClient);
 //                        break;
 //                    case "Exit":

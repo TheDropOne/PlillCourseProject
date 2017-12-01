@@ -2,19 +2,16 @@ package server;
 
 import java.sql.Statement;
 
-/**
- * Created by philip on 30.11.17.
- */
-abstract public class DataTable {
-    protected Statement statement;
-    protected DatabaseConnection mydbc;
+abstract class DataTable {
+    Statement statement;
+    DatabaseConnection databaseConnection;
 
-    public DataTable(Statement statement, DatabaseConnection mydbc) {
+    DataTable(Statement statement, DatabaseConnection databaseConnection) {
         this.statement = statement;
-        this.mydbc = mydbc;
+        this.databaseConnection = databaseConnection;
     }
 
-    public String quotate(String content) {
+    String quotate(String content) {
         return "'" + content + "'";
     }
 

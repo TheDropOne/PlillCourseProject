@@ -3,28 +3,33 @@ package server;
 /**
  * Created by philip on 29.11.17.
  */
+
 import java.sql.*;
-//import com.mysql.fabric.jdbc.FabricMySQLDriver;
+
+import settings.CustomSettings;
 
 public class DatabaseConnection {
     private Connection myDBConnection;
-//    private static final String URL = "jdbc:mysql://localhost:3306/mydb?useUnicode=true&useSSL=true&useJDBCCompliantTimezoneShift=true" +
-//            "&useLegacyDatetimeCode=false&serverTimezone=UTC";
+
     public DatabaseConnection() {
     }
 
     public void initialization() {
         try {
-            //Driver driver=new FabricMySQLDriver();
             Class.forName("com.mysql.jdbc.Driver");
-            myDBConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/coursach", "phillip", "password");
-            if(!myDBConnection.isClosed()) {
+            myDBConnection = DriverManager.getConnection(
+                    CustomSettings.hostname + CustomSettings.databaseName, // Адрес
+                    CustomSettings.username, // Имя пользователя
+                    CustomSettings.password // Пароль
+            );
+            if (!myDBConnection.isClosed()) {
                 System.out.println("Соединение с БД установлено....");
             }
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex);
         }
     }
+
     public void closeConnection(Statement statement) {
         if (statement != null) {
             try {
@@ -33,6 +38,7 @@ public class DatabaseConnection {
             }
         }
     }
+
     public Connection getMyConnection() {
 
         return myDBConnection;

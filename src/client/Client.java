@@ -3,7 +3,6 @@ package client;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -15,16 +14,13 @@ import java.net.UnknownHostException;
 
 import static javax.swing.SwingUtilities.invokeLater;
 
-/**
- * Created by philip on 29.11.17.
- */
 public class Client extends JFrame {
     private JPanel panel;
     private JButton authorizationButton;
     static String clientMessage;
     static Socket socket;
-    static ObjectOutputStream outstream; //поток вывода
-    static ObjectInputStream inputstream; //поток ввода
+    static ObjectOutputStream outputStream;
+    static ObjectInputStream inputStream;
 
     public Client() {
         initializationComponents();
@@ -32,8 +28,8 @@ public class Client extends JFrame {
         try {
             socket = new Socket(InetAddress.getLocalHost(), 8055);
 
-            outstream = new ObjectOutputStream(socket.getOutputStream());
-            inputstream = new ObjectInputStream(socket.getInputStream());
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            inputStream = new ObjectInputStream(socket.getInputStream());
 
         } catch (UnknownHostException ex) {
             System.err.println("Адрес недоступен" + ex);
@@ -55,7 +51,7 @@ public class Client extends JFrame {
                 formWindowClosing(ev);
             }
         });
-        authorizationButton.addActionListener(evt -> userLoginButtonActionPerformed(evt));
+        authorizationButton.addActionListener(this::userLoginButtonActionPerformed);
         GroupLayout jPanel1Layout = new GroupLayout(panel);
         panel.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -101,11 +97,11 @@ public class Client extends JFrame {
 
     private static void disconnectConnection() {
         try {
-            if (inputstream != null) {
-                inputstream.close();
+            if (inputStream != null) {
+                inputStream.close();
             }
-            if (outstream != null) {
-                outstream.close();
+            if (outputStream != null) {
+                outputStream.close();
             }
             if (socket != null) {
                 socket.close();

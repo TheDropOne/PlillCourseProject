@@ -1,13 +1,9 @@
 package server;
 
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-/**
- * Created by philip on 29.11.17.
- */
 public class Server {
     public static void main(String[] args) {
         try {

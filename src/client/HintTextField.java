@@ -4,10 +4,6 @@ import javax.swing.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
-/**
- * Created by philip on 30.11.17.
- */
-
 class HintTextField extends JTextField implements FocusListener {
 
     private final String hint;
@@ -22,14 +18,15 @@ class HintTextField extends JTextField implements FocusListener {
 
     @Override
     public void focusGained(FocusEvent e) {
-        if(this.getText().isEmpty()) {
+        if (this.getText().isEmpty()) {
             super.setText("");
             showingHint = false;
         }
     }
+
     @Override
     public void focusLost(FocusEvent e) {
-        if(this.getText().isEmpty()) {
+        if (this.getText().isEmpty()) {
             super.setText(hint);
             showingHint = true;
         }

@@ -3,12 +3,8 @@ package client;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 
-/**
- * Created by philip on 29.11.17.
- */
-public class Authorization extends JFrame {
+class Authorization extends JFrame {
     private JButton entrance;
     private JButton registration;
     private JTextField loginField;
@@ -19,7 +15,7 @@ public class Authorization extends JFrame {
     private JLabel informationLabel;
 
 
-    public Authorization() {
+    Authorization() {
         super("Авторизация");
         entrance = new JButton("Вход");
         registration = new JButton("Регистрация");
@@ -84,8 +80,8 @@ public class Authorization extends JFrame {
 
             clientMessage = "CheckUserLogin" + "," + login + "," + password;
 
-            Client.outstream.writeObject(clientMessage);
-            String message = (String) Client.inputstream.readObject();
+            Client.outputStream.writeObject(clientMessage);
+            String message = (String) Client.inputStream.readObject();
             String arrayOfMessages[] = message.split(",");
             switch (arrayOfMessages[0]) {
                 case "success":
