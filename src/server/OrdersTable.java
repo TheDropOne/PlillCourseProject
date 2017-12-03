@@ -83,34 +83,4 @@ public class OrdersTable extends DataTable implements ResultFromTable {
             return "Ошибка базы данных";
         }
     }
-
-    public String deleteFromTable(Integer number) {
-        try {
-            String insertStr = "DELETE FROM content WHERE id=" + number;
-            int done = statement.executeUpdate(insertStr);
-            return (done != 0) ? "Успешно удалено" : "Ошибка удаления!";
-        } catch (Exception e) {
-            System.err.println("Ошибка удаления данных");
-            return "fail";
-        }
-    }
-
-    public String updateRecord(String data, int number) {
-        try {
-            String[] splitted = data.split(" ");
-            String insertStr = "UPDATE content SET " +
-                    "name=" + quotate(splitted[0]) +
-                    ", firm=" + quotate(splitted[1]) +
-                    ", year_of_publishing=" + splitted[2] +
-                    ", price=" + splitted[3] +
-                    ", amount=" + splitted[4] +
-                    " WHERE id=" + number + ";";
-
-            int done = statement.executeUpdate(insertStr);
-            return (done != 0) ? "Успешно обновлено" : "Ошибка обновления!";
-        } catch (Exception e) {
-            System.err.println("Ошибка обновления данных");
-            return "fail";
-        }
-    }
 }
