@@ -1,17 +1,11 @@
 package client;
 
 import client.entity.CatalogRecord;
-import server.CatalogTable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ContentTable extends JTable {
 

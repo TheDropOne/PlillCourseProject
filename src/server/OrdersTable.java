@@ -1,28 +1,57 @@
 package server;
 
+import server.entity.OrderRecord;
 import server.entity.CatalogRecord;
-import server.entity.InsertRecord;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
-public class CatalogTable extends DataTable implements ResultFromTable {
-    public CatalogTable(Statement statement, DatabaseConnection mydbc) {
+public class OrdersTable extends DataTable implements ResultFromTable {
+
+    public OrdersTable(Statement statement, DatabaseConnection mydbc) {
         super(statement, mydbc);
     }
 
     public ResultSet getResultFromTable() {
         ResultSet result = null;
         try {
-            result = statement.executeQuery("SELECT * FROM content");
+            result = statement.executeQuery("SELECT user_id, users.login, content_id, content.name, amount FROM orders" +
+                    "LEFT JOIN users ON orders.user_id = users.id " +
+                    "LEFT JOIN content ON orders.content_id = content.id;");
         } catch (SQLException ex) {
             ex.printStackTrace();
             System.err.println(ex.getMessage());
         }
         return result;
+    }
+
+    public List<OrderRecord> readAllRecords() {
+        ResultSet result = getResultFromTable();
+        List<OrderRecord> records = new ArrayList<>();
+        try {
+            while (result.next()) {
+                OrderRecord record = new OrderRecord(
+                        result.getInt("user_id"),
+                        result.getString("login"),
+                        result.getInt("content_id"),
+                        result.getString("name"),
+                        result.getInt("amount")
+                );
+                records.add(record);
+            }
+            return records;
+        } catch (Exception e) {
+            System.err.println("Хьюстон, у нас проблемы!");
+        } finally {
+            databaseConnection.closeConnection(result);
+        }
+        return null;
     }
 
     public String addInTable(String data) {
@@ -70,29 +99,5 @@ public class CatalogTable extends DataTable implements ResultFromTable {
             System.err.println("Ошибка обновления данных");
             return "fail";
         }
-    }
-
-    public List<CatalogRecord> readAllRecords() {
-        ResultSet result = getResultFromTable();
-        List<CatalogRecord> records = new ArrayList<>();
-        try {
-            while (result.next()) {
-                CatalogRecord record = new CatalogRecord(
-                        result.getInt("id"),
-                        result.getString("name"),
-                        result.getString("firm"),
-                        result.getInt("year_of_publishing"),
-                        result.getInt("price"),
-                        result.getInt("amount")
-                );
-                records.add(record);
-            }
-            return records;
-        } catch (Exception e) {
-            System.err.println("Хьюстон, у нас проблемы!");
-        } finally {
-            databaseConnection.closeConnection(result);
-        }
-        return null;
     }
 }

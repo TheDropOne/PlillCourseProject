@@ -1,7 +1,7 @@
 package server;
 
-import client.entity.CatalogRecord;
-import client.entity.InsertRecord;
+import server.entity.OrderRecord;
+import server.entity.CatalogRecord;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -23,7 +23,9 @@ public class ServerThread extends Thread {
     private Statement statement;
     private int number;
     private UserTable userTable;
+
     private CatalogTable catalogTable;
+    private OrdersTable ordersTable;
 
     public ServerThread(Socket s, int number) throws IOException {
         this.number = number;
@@ -40,6 +42,7 @@ public class ServerThread extends Thread {
             userTable = new UserTable(statement, mydbc);
             //pupilTable = new PupilTable(stmt, mdbc);
             catalogTable = new CatalogTable(statement, mydbc);
+            ordersTable = new OrdersTable(statement, mydbc);
         } catch (SQLException ex) {
             ex.printStackTrace();
             System.err.println(ex.getMessage());
@@ -106,12 +109,11 @@ public class ServerThread extends Thread {
                         messageToClient = catalogTable.updateRecord(data, Integer.parseInt(numberForUpdate));
                         writeObj(messageToClient);
                         break;
-//                    case "filterInPupilTable":
-//                        String FilterColumn = messageParts[1];
-//                        String FilterValue = messageParts[2];
-//                        messageToClient = pupilTable.filterInTable(FilterColumn, FilterValue);
-//                        writeObj(messageToClient);
-//                        break;
+
+
+                    case "orders_records":
+                        writeObj((ArrayList<OrderRecord>) ordersTable.readAllRecords());
+                        break;
 //                    case "sortInPupilTable":
 //                        String sortColumn = messageParts[1];
 //                        String ifDesc = messageParts[2];

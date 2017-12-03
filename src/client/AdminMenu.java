@@ -2,19 +2,14 @@ package client;
 
 import client.entity.CatalogRecord;
 import client.entity.InsertRecord;
-import server.CatalogTable;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class AdminMenu extends JFrame {
     private JButton viewButton;
     private JButton addButton;
-    private JButton redactButton;
+    private JButton updateButton;
     private JButton deleteButton;
 
     private JPanel panel;
@@ -32,7 +27,7 @@ public class AdminMenu extends JFrame {
         panel = new JPanel(null);
         viewButton = new JButton("Просмотр");
         addButton = new JButton("Добавить");
-        redactButton = new JButton("Редактировать");
+        updateButton = new JButton("Редактировать");
         deleteButton = new JButton("Удалить");
         setSize(800, 800);
         viewButton.setSize(230, 100);
@@ -77,7 +72,7 @@ public class AdminMenu extends JFrame {
                 attention.setText("Неверные данные!");
             }
         });
-        updateNumber.addActionListener(e -> {
+        updateButton.addActionListener(e -> {
             try {
                 InsertRecord record = new InsertRecord();
                 record.setName(fields[0].getText());
@@ -97,8 +92,8 @@ public class AdminMenu extends JFrame {
         });
         addButton.setSize(230, 100);
         addButton.setLocation(430, 60);
-        redactButton.setSize(230, 100);
-        redactButton.setLocation(130, 200);
+        updateButton.setSize(230, 100);
+        updateButton.setLocation(130, 200);
         deleteButton.setSize(230, 100);
         deleteButton.setLocation(430, 200);
 
@@ -117,7 +112,7 @@ public class AdminMenu extends JFrame {
 
         updateNumber = new JTextField();
         updateNumber.setSize(40, 40);
-        updateNumber.setLocation(100, 230);
+        updateNumber.setLocation(60, 230);
         updateNumber.setVisible(true);
 
         attention = new JLabel();
@@ -129,12 +124,13 @@ public class AdminMenu extends JFrame {
 
         panel.add(viewButton);
         panel.add(addButton);
-        panel.add(redactButton);
+        panel.add(updateButton);
         panel.add(deleteButton);
         panel.add(deleteNumber);
         panel.add(updateNumber);
         add(panel);
         setLocationRelativeTo(null);
+        setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
