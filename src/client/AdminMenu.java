@@ -1,6 +1,6 @@
 package client;
 
-import client.entity.CatalogRecord;
+import server.entity.CatalogRecord;
 import client.entity.InsertRecord;
 
 import javax.swing.*;

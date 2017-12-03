@@ -1,6 +1,8 @@
 package client;
 
-import client.entity.CatalogRecord;
+import client.entity.InsertRecord;
+import server.entity.CatalogRecord;
+import server.entity.OrderRecord;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +17,7 @@ public class UserMenu extends JFrame {
 
     private JButton viewButton;
     private JButton addButton;
+    private JButton writeToFileButton;
 
     private JPanel panel;
 
@@ -24,38 +27,70 @@ public class UserMenu extends JFrame {
     private ContentTable contentTable;
     private OrdersTable ordersTable;
 
+    private JTextField addNumber;
 
-    UserMenu(String login) throws HeadlessException {
+    private JLabel attention;
+
+    UserMenu(String login, int id) throws HeadlessException {
         super("Меню пользователя, Ваш ник  - " + login);
         panel = new JPanel(null);
-        
+
         setSize(800, 800);
         viewButton = new JButton("Просмотр");
-        addButton = new JButton("Добавить");
+        addButton = new JButton("Заказать номер ");
         viewButton.setSize(230, 100);
         viewButton.setLocation(130, 60);
         addButton.setSize(230, 100);
         addButton.setLocation(430, 60);
+        writeToFileButton = new JButton("Записать в файл");
+        writeToFileButton.setSize(230, 60);
+        writeToFileButton.setLocation(230, 220);
 
-        viewButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    Client.outputStream.writeObject("catalog_records,");
-                    ArrayList<CatalogRecord> records = (ArrayList<CatalogRecord>) Client.inputStream.readObject();
-                    attachContentTable(new ContentTable(records));
+        viewButton.addActionListener(e -> {
+            try {
+                Client.outputStream.writeObject("catalog_records,");
+                ArrayList<CatalogRecord> records = (ArrayList<CatalogRecord>) Client.inputStream.readObject();
+                attachContentTable(new ContentTable(records));
 
-                    Client.outputStream.writeObject("orders_records,");
-                    ArrayList<CatalogRecord> orders = (ArrayList<CatalogRecord>) Client.inputStream.readObject();
-                    attachContentTable(new ContentTable(orders));
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
+                Client.outputStream.writeObject("orders_records,");
+                ArrayList<OrderRecord> orders = (ArrayList<OrderRecord>) Client.inputStream.readObject();
+                attachOrdersTable(new OrdersTable(orders));
+            } catch (Exception e1) {
+                e1.printStackTrace();
             }
         });
+        addButton.addActionListener(e -> {
+            try {
+                int orderNumber = Integer.parseInt(addNumber.getText());
 
+                Client.outputStream.writeObject("add_order," + orderNumber + "," + id);
+                String response = (String) Client.inputStream.readObject();
+
+                attention.setText(response);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                attention.setText("Неверные данные!");
+            }
+        });
+        writeToFileButton.addActionListener(e -> {
+
+        });
+
+        attention = new JLabel();
+        attention.setSize(740, 30);
+        attention.setLocation(30, 260);
+        attention.setText("");
+        attention.setVisible(true);
+        addNumber = new JTextField();
+        addNumber.setSize(40, 40);
+        addNumber.setLocation(700, 100);
+        addNumber.setVisible(true);
+
+        panel.add(attention);
         panel.add(viewButton);
         panel.add(addButton);
+        panel.add(addNumber);
+        panel.add(writeToFileButton);
         add(panel);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -74,7 +109,7 @@ public class UserMenu extends JFrame {
 
     public void attachOrdersTable(OrdersTable ordersTable) {
         this.ordersTable = ordersTable;
-        ordersScroll = new JScrollPane(contentTable);
+        ordersScroll = new JScrollPane(ordersTable);
         ordersScroll.setSize(740, 160);
         ordersScroll.setLocation(30, 580);
         ordersScroll.setVisible(true);

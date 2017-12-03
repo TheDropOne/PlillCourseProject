@@ -24,7 +24,7 @@ public class ServerThread extends Thread {
     private int number;
     private UserTable userTable;
 
-    private CatalogTable catalogTable;
+    private ContentTable catalogTable;
     private OrdersTable ordersTable;
 
     public ServerThread(Socket s, int number) throws IOException {
@@ -41,7 +41,7 @@ public class ServerThread extends Thread {
             statement = conn.createStatement();
             userTable = new UserTable(statement, mydbc);
             //pupilTable = new PupilTable(stmt, mdbc);
-            catalogTable = new CatalogTable(statement, mydbc);
+            catalogTable = new ContentTable(statement, mydbc);
             ordersTable = new OrdersTable(statement, mydbc);
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -114,12 +114,9 @@ public class ServerThread extends Thread {
                     case "orders_records":
                         writeObj((ArrayList<OrderRecord>) ordersTable.readAllRecords());
                         break;
-//                    case "sortInPupilTable":
-//                        String sortColumn = messageParts[1];
-//                        String ifDesc = messageParts[2];
-//                        messageToClient = pupilTable.SortInTable(sortColumn, ifDesc);
-//                        writeObj(messageToClient);
-//                        break;
+                    case "add_order":
+                        writeObj(ordersTable.addInTable(messageParts[1] + " " + messageParts[2]));
+                        break;
 //                    case "addInOrdersTable":
 //                        messageToClient = orderTable.addInTable(messageParts);
 //                        writeObj(messageToClient);

@@ -21,7 +21,7 @@ public class OrdersTable extends DataTable implements ResultFromTable {
     public ResultSet getResultFromTable() {
         ResultSet result = null;
         try {
-            result = statement.executeQuery("SELECT user_id, users.login, content_id, content.name, amount FROM orders" +
+            result = statement.executeQuery("SELECT user_id, users.login, content_id, content.name, orders.amount FROM orders " +
                     "LEFT JOIN users ON orders.user_id = users.id " +
                     "LEFT JOIN content ON orders.content_id = content.id;");
         } catch (SQLException ex) {
@@ -55,19 +55,32 @@ public class OrdersTable extends DataTable implements ResultFromTable {
     }
 
     public String addInTable(String data) {
+        ResultSet result;
+        int done = 0;
         String[] splitted = data.split(" ");
         try {
-            String insertStr = "INSERT INTO content (name, firm, year_of_publishing, price, amount) VALUES ("
-                    + quotate(splitted[0]) + ","
-                    + quotate(splitted[1]) + ","
-                    + splitted[2] + ","
-                    + splitted[3] + ","
-                    + splitted[4] + ")";
-            int done = statement.executeUpdate(insertStr);
-            return (done != 0) ? "Успешно добавлено" : "Ошибка добавления!";
+            String insertStr = "INSERT INTO orders VALUES ("
+                    + Integer.parseInt(splitted[1]) + "," // user_id
+                    + Integer.parseInt(splitted[0]) + "," // content_id
+                    + 1 + ")"; // 1 Заказ
+            done = statement.executeUpdate(insertStr);
+
+            if (done != 0) {
+                result = statement.executeQuery("SELECT content.amount FROM content WHERE id= " +
+                        Integer.parseInt(splitted[0]) + ";");
+                result.next();
+                int amount = result.getInt("amount") - 1;
+                String updateStr = "UPDATE content SET " +
+                        " amount=" + amount +
+                        " WHERE id=" + Integer.parseInt(splitted[0]) + ";";
+                done = statement.executeUpdate(updateStr);
+                return (done != 0) ? "Успешно добавлено" : "Ошибка добавления!";
+            } else {
+                return "Ошибка добавления!";
+            }
         } catch (Exception ex) {
-            System.err.println("Ошибка ввода данных");
-            return "fail";
+            ex.printStackTrace();
+            return "Ошибка базы данных";
         }
     }
 
@@ -88,9 +101,9 @@ public class OrdersTable extends DataTable implements ResultFromTable {
             String insertStr = "UPDATE content SET " +
                     "name=" + quotate(splitted[0]) +
                     ", firm=" + quotate(splitted[1]) +
-                    ", year_of_publishing=" +splitted[2] +
-                    ", price=" +splitted[3] +
-                    ", amount=" +  splitted[4] +
+                    ", year_of_publishing=" + splitted[2] +
+                    ", price=" + splitted[3] +
+                    ", amount=" + splitted[4] +
                     " WHERE id=" + number + ";";
 
             int done = statement.executeUpdate(insertStr);

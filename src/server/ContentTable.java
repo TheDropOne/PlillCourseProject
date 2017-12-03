@@ -9,8 +9,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CatalogTable extends DataTable implements ResultFromTable {
-    public CatalogTable(Statement statement, DatabaseConnection mydbc) {
+public class ContentTable extends DataTable implements ResultFromTable {
+    public ContentTable(Statement statement, DatabaseConnection mydbc) {
         super(statement, mydbc);
     }
 
@@ -49,6 +49,7 @@ public class CatalogTable extends DataTable implements ResultFromTable {
             return (done != 0) ? "Успешно удалено" : "Ошибка удаления!";
         } catch (Exception e) {
             System.err.println("Ошибка удаления данных");
+            e.printStackTrace();
             return "fail";
         }
     }

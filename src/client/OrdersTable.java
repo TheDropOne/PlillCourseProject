@@ -1,6 +1,6 @@
 package client;
 
-import client.entity.OrderRecord;
+import server.entity.OrderRecord;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

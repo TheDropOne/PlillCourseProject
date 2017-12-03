@@ -96,7 +96,7 @@ class Authorization extends JFrame {
                         this.setVisible(false);
                     }
                     if (arrayOfMessages[1].equals(String.valueOf(2))) {
-                        new UserMenu(login).setVisible(true);
+                        new UserMenu(login, Integer.parseInt((arrayOfMessages[2]))).setVisible(true);
                         this.setVisible(false);
                     }
                     break;

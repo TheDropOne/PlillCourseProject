@@ -26,9 +26,9 @@ public class UserTable extends DataTable implements ResultFromTable {
         ResultSet rs = getRoleFromTable(statement, login, password);
         try {
             if (rs.next() && rs.getString("role") != null && !rs.getString("role").isEmpty()) {
-                return "success" + "," + rs.getString("role");
+                return "success" + "," + rs.getString("role") + "," + rs.getString("id");
             } else {
-                return "fail,3";
+                return "fail";
             }
         } catch (SQLException e) {
             System.err.println("Произошло исключение в таблице пользователя");
