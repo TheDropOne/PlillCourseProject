@@ -112,7 +112,7 @@ public class ServerThread extends Thread {
 
 
                     case "orders_records":
-                        writeObj((ArrayList<OrderRecord>) ordersTable.readAllRecords());
+                        writeObj((ArrayList<OrderRecord>) ordersTable.readAllRecords(Integer.parseInt(messageParts[1])));
                         break;
                     case "add_order":
                         writeObj(ordersTable.addInTable(messageParts[1] + " " + messageParts[2]));
@@ -144,6 +144,7 @@ public class ServerThread extends Thread {
             }
         } catch (Exception e) {
             System.err.println("Соединение закрыто");
+            e.printStackTrace();
         } finally {
             disconnect(); // уничтожение потока
         }

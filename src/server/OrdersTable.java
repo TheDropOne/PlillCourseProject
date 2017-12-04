@@ -18,12 +18,14 @@ public class OrdersTable extends DataTable implements ResultFromTable {
         super(statement, mydbc);
     }
 
-    public ResultSet getResultFromTable() {
+
+    public ResultSet getResultFromTable(int id) {
         ResultSet result = null;
         try {
             result = statement.executeQuery("SELECT user_id, users.login, content_id, content.name, orders.amount FROM orders " +
                     "LEFT JOIN users ON orders.user_id = users.id " +
-                    "LEFT JOIN content ON orders.content_id = content.id;");
+                    "LEFT JOIN content ON orders.content_id = content.id " +
+                    "WHERE user_id =" + String.valueOf(id));
         } catch (SQLException ex) {
             ex.printStackTrace();
             System.err.println(ex.getMessage());
@@ -31,8 +33,8 @@ public class OrdersTable extends DataTable implements ResultFromTable {
         return result;
     }
 
-    public List<OrderRecord> readAllRecords() {
-        ResultSet result = getResultFromTable();
+    public List<OrderRecord> readAllRecords(int userId) {
+        ResultSet result = getResultFromTable(userId);
         List<OrderRecord> records = new ArrayList<>();
         try {
             while (result.next()) {
@@ -82,5 +84,10 @@ public class OrdersTable extends DataTable implements ResultFromTable {
             ex.printStackTrace();
             return "Ошибка базы данных";
         }
+    }
+
+    @Override
+    public ResultSet getResultFromTable() {
+        return null;
     }
 }

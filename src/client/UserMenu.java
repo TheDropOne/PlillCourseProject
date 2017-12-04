@@ -52,7 +52,7 @@ public class UserMenu extends JFrame {
                 ArrayList<CatalogRecord> records = (ArrayList<CatalogRecord>) Client.inputStream.readObject();
                 attachContentTable(new ContentTable(records));
 
-                Client.outputStream.writeObject("orders_records,");
+                Client.outputStream.writeObject("orders_records,"+id);
                 ArrayList<OrderRecord> orders = (ArrayList<OrderRecord>) Client.inputStream.readObject();
                 attachOrdersTable(new OrdersTable(orders));
             } catch (Exception e1) {
