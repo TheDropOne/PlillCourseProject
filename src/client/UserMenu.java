@@ -21,6 +21,7 @@ public class UserMenu extends JFrame {
     private JButton viewButton;
     private JButton addButton;
     private JButton writeToFileButton;
+    private JButton deleteOrderButton;
 
     private JPanel panel;
 
@@ -31,15 +32,20 @@ public class UserMenu extends JFrame {
     private OrdersTable ordersTable;
 
     private JTextField addNumber;
+    private JTextField deleteNumber;
 
     private JLabel attention;
 
     private static ArrayList<OrderRecord> orders;
     private FileWriter fileWriter;
 
+    private int id;
+
     UserMenu(String login, int id) throws HeadlessException {
         super("Меню пользователя, Ваш ник  - " + login);
         panel = new JPanel(null);
+
+        this.id = id;
 
         setSize(800, 800);
         viewButton = new JButton("Просмотр");
@@ -50,7 +56,10 @@ public class UserMenu extends JFrame {
         addButton.setLocation(430, 60);
         writeToFileButton = new JButton("Записать в файл");
         writeToFileButton.setSize(230, 60);
-        writeToFileButton.setLocation(230, 220);
+        writeToFileButton.setLocation(130, 180);
+        deleteOrderButton = new JButton("Удалить заказ");
+        deleteOrderButton.setSize(230, 60);
+        deleteOrderButton.setLocation(430, 180);
         writeToFileButton.addActionListener(e -> {
             try {
                 File file = new File(CustomSettings.FILENAME);
@@ -80,19 +89,23 @@ public class UserMenu extends JFrame {
                 }
             }
         });
-
-        viewButton.addActionListener(e -> {
+        deleteOrderButton.addActionListener(e -> {
             try {
-                Client.outputStream.writeObject("catalog_records,");
-                ArrayList<CatalogRecord> records = (ArrayList<CatalogRecord>) Client.inputStream.readObject();
-                attachContentTable(new ContentTable(records));
+                int orderNumber = Integer.parseInt(deleteNumber.getText());
 
-                Client.outputStream.writeObject("orders_records," + id);
-                orders = (ArrayList<OrderRecord>) Client.inputStream.readObject();
-                attachOrdersTable(new OrdersTable(orders));
+                Client.outputStream.writeObject("delete_order," + orderNumber);
+                String response = (String) Client.inputStream.readObject();
+
+                attention.setText(response);
+                updateData();
             } catch (Exception e1) {
                 e1.printStackTrace();
+                attention.setText("Неверные данные!");
             }
+        });
+
+        viewButton.addActionListener(e -> {
+            updateData();
         });
         addButton.addActionListener(e -> {
             try {
@@ -102,6 +115,7 @@ public class UserMenu extends JFrame {
                 String response = (String) Client.inputStream.readObject();
 
                 attention.setText(response);
+                updateData();
             } catch (Exception e1) {
                 e1.printStackTrace();
                 attention.setText("Неверные данные!");
@@ -117,16 +131,36 @@ public class UserMenu extends JFrame {
         addNumber.setSize(40, 40);
         addNumber.setLocation(700, 100);
         addNumber.setVisible(true);
+        deleteNumber = new JTextField();
+        deleteNumber.setSize(40, 40);
+        deleteNumber.setLocation(700, 190);
+        deleteNumber.setVisible(true);
 
         panel.add(attention);
         panel.add(viewButton);
         panel.add(addButton);
+        panel.add(deleteOrderButton);
         panel.add(addNumber);
+        panel.add(deleteNumber);
         panel.add(writeToFileButton);
         add(panel);
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    private void updateData() {
+        try {
+            Client.outputStream.writeObject("catalog_records,");
+            ArrayList<CatalogRecord> records = (ArrayList<CatalogRecord>) Client.inputStream.readObject();
+            attachContentTable(new ContentTable(records));
+
+            Client.outputStream.writeObject("orders_records," + id);
+            orders = (ArrayList<OrderRecord>) Client.inputStream.readObject();
+            attachOrdersTable(new OrdersTable(orders));
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
     }
 
     private void attachContentTable(ContentTable contentTable) {

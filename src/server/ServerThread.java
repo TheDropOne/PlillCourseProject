@@ -123,6 +123,9 @@ public class ServerThread extends Thread {
                     case "add_order":
                         writeObj(ordersTable.addInTable(messageParts[1] + " " + messageParts[2]));
                         break;
+                    case "delete_order":
+                        writeObj(ordersTable.deleteFromTable(messageParts[1]));
+                        break;
 //                    case "addInOrdersTable":
 //                        messageToClient = orderTable.addInTable(messageParts);
 //                        writeObj(messageToClient);

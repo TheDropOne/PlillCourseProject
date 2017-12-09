@@ -3,6 +3,7 @@ package server.entity;
 import java.io.Serializable;
 
 public class OrderRecord implements Serializable {
+    int order_id;
     int user_id;
     String user_name; // Joined from database via SELECT query
     int content_id;
@@ -29,7 +30,12 @@ public class OrderRecord implements Serializable {
         return content_name;
     }
 
-    public OrderRecord(int user_id, String user_name, int content_id, String content_name, int amount) {
+    public int getOrderId() {
+        return order_id;
+    }
+
+    public OrderRecord(int order_id, int user_id, String user_name, int content_id, String content_name, int amount) {
+        this.order_id = order_id;
         this.user_id = user_id;
         this.user_name = user_name;
         this.content_id = content_id;

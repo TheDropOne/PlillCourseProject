@@ -11,6 +11,7 @@ public class OrdersTable extends JTable {
 
     public OrdersTable(List<OrderRecord> list) {
         DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("order_id");
         model.addColumn("user_id");
         model.addColumn("user_name");
         model.addColumn("content_id");
@@ -18,7 +19,7 @@ public class OrdersTable extends JTable {
         model.addColumn("amount");
         for (OrderRecord record : list) {
             Vector v = new Vector();
-
+            v.add(record.getOrderId());
             v.add(record.getUserId());
             v.add(record.getUserName());
             v.add(record.getContentId());
