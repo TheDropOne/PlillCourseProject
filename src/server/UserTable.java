@@ -21,6 +21,20 @@ public class UserTable extends DataTable implements ResultFromTable {
         return rs;
     }
 
+    public String registration(String login, String password) {
+        ResultSet resultSet = null;
+        try {
+            String query = "INSERT INTO users (login,password,role) VALUES (" +
+                    quotate(login)+", " + quotate(password) + ", 2);";
+            int done1 = statement.executeUpdate(query);
+            return (done1 != 0) ? "successreg," : "Ошибка добавления пользователя в систему!";
+        } catch (SQLException e) {
+            return "An registration error occured";
+        } catch (Exception ex){
+            return "An internal error occured";
+        }
+    }
+
 
     String checkLogin(String login, String password) {
         ResultSet rs = getRoleFromTable(statement, login, password);

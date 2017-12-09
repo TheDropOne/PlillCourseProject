@@ -36,4 +36,15 @@ public class OrderRecord implements Serializable {
         this.content_name = content_name;
         this.amount = amount;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(user_name);
+        sb.append("\t\t");
+        sb.append(content_name);
+        sb.append("\t\t");
+        sb.append(amount);
+        sb.append(System.lineSeparator());
+        return sb.toString();
+    }
 }

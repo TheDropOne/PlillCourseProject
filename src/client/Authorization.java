@@ -55,14 +55,15 @@ class Authorization extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
-        entrance.addActionListener(e -> checkEntranceButton(e));
+        entrance.addActionListener(e -> checkEntranceButton("login"));
+        registration.addActionListener(e -> checkEntranceButton("registration"));
     }
 
     public String setColoredText(String message) {
         return "<html><font color='red'>" + message + "</font></html>";
     }
 
-    private void checkEntranceButton(ActionEvent ev) {
+    private void checkEntranceButton(String event) {
         try {
             String clientMessage;
             String login;
@@ -83,8 +84,13 @@ class Authorization extends JFrame {
                 passwordLabel.setForeground(Color.red);
                 passwordLabel.setText("Неверный пароль!");
             }
-
-            clientMessage = "CheckUserLogin" + "," + login + "," + password;
+            switch (event){
+                case "login":
+                    clientMessage = "CheckUserLogin" + "," + login + "," + password;
+                    break;
+                default:
+                    clientMessage = "registration" + "," + login + "," + password;
+            }
 
             Client.outputStream.writeObject(clientMessage);
             String message = (String) Client.inputStream.readObject();
@@ -102,6 +108,10 @@ class Authorization extends JFrame {
                     break;
                 case "fail":
                     informationLabel.setText("Ошибка во входных данных!");
+                    informationLabel.setVisible(true);
+                    break;
+                case "successreg":
+                    informationLabel.setText("Регистрация прошла успешно!");
                     informationLabel.setVisible(true);
                     break;
                 default:

@@ -86,9 +86,15 @@ public class ServerThread extends Thread {
                 String messageParts[] = bufMessage.split(",");
                 switch (messageParts[0]) {
                     case "CheckUserLogin":
-                        String UserLogin = messageParts[1];
-                        String UserPassword = messageParts[2];
-                        messageToClient = userTable.checkLogin(UserLogin, UserPassword);
+                        String userLogin = messageParts[1];
+                        String userPassword = messageParts[2];
+                        messageToClient = userTable.checkLogin(userLogin, userPassword);
+                        writeObj(messageToClient);
+                        break;
+                    case "registration":
+                        String login = messageParts[1];
+                        String password = messageParts[2];
+                        messageToClient = userTable.registration(login, password);
                         writeObj(messageToClient);
                         break;
                     case "catalog_records":

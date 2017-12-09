@@ -6,6 +6,8 @@ public interface CustomSettings {
     String username = "phillip";
     String password = "password";
 
+    String FILENAME = "outputFile.txt";
+
    /*
     CREATE TABLE content (id int PRIMARY KEY AUTO_INCREMENT, name varchar(50) NOT NULL, firm varchar(50) NOT NULL, year_of_publishing int NOT NULL, price int NOT NULL, amount int NOT NULL);
     CREATE TABLE orders(user_id int, content_id int NOT NULL, amount int NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id), FOREIGN KEY (content_id) REFERENCES content(id));

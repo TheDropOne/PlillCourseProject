@@ -3,12 +3,15 @@ package client;
 import client.entity.InsertRecord;
 import server.entity.CatalogRecord;
 import server.entity.OrderRecord;
+import settings.CustomSettings;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 /**
  * Created by philip on 29.11.17.
@@ -31,6 +34,9 @@ public class UserMenu extends JFrame {
 
     private JLabel attention;
 
+    private static ArrayList<OrderRecord> orders;
+    private FileWriter fileWriter;
+
     UserMenu(String login, int id) throws HeadlessException {
         super("Меню пользователя, Ваш ник  - " + login);
         panel = new JPanel(null);
@@ -45,6 +51,35 @@ public class UserMenu extends JFrame {
         writeToFileButton = new JButton("Записать в файл");
         writeToFileButton.setSize(230, 60);
         writeToFileButton.setLocation(230, 220);
+        writeToFileButton.addActionListener(e -> {
+            try {
+                File file = new File(CustomSettings.FILENAME);
+                fileWriter = new FileWriter(file);
+                fileWriter.write("Заказики :" + System.lineSeparator());
+                if (orders == null || orders.isEmpty()) {
+                    attention.setText("Нет данных для записи в файл");
+                } else {
+                    orders.forEach(orderRecord -> {
+                        try {
+                            fileWriter.write(orderRecord.toString());
+                        } catch (IOException e1) {
+                            attention.setText("Ошибка ввода-вывода при записи");
+                            System.err.println("Ошибка ввода-вывода при записи");
+                        }
+                    });
+                }
+                attention.setText("Успешно записано в файл");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } finally {
+                try {
+                    fileWriter.close();
+                } catch (IOException e1) {
+                    System.err.println("Нет потока для закрытия");
+                    attention.setText("Ошибка ввода-вывода при записи");
+                }
+            }
+        });
 
         viewButton.addActionListener(e -> {
             try {
@@ -52,8 +87,8 @@ public class UserMenu extends JFrame {
                 ArrayList<CatalogRecord> records = (ArrayList<CatalogRecord>) Client.inputStream.readObject();
                 attachContentTable(new ContentTable(records));
 
-                Client.outputStream.writeObject("orders_records,"+id);
-                ArrayList<OrderRecord> orders = (ArrayList<OrderRecord>) Client.inputStream.readObject();
+                Client.outputStream.writeObject("orders_records," + id);
+                orders = (ArrayList<OrderRecord>) Client.inputStream.readObject();
                 attachOrdersTable(new OrdersTable(orders));
             } catch (Exception e1) {
                 e1.printStackTrace();
@@ -71,9 +106,6 @@ public class UserMenu extends JFrame {
                 e1.printStackTrace();
                 attention.setText("Неверные данные!");
             }
-        });
-        writeToFileButton.addActionListener(e -> {
-
         });
 
         attention = new JLabel();
